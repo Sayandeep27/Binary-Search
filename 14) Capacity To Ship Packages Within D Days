@@ -1,0 +1,70 @@
+class Solution {
+public:
+    
+    bool is_possible(vector<int>&weights,int days,int mid,int n)
+    {
+        
+        int sum=0;
+        int time=1;
+        
+        for(int i=0;i<n;i++)
+        {
+            sum+=weights[i];
+            
+            if(sum>mid)
+            {
+                time++;
+                sum=weights[i];
+                
+                if(time>days)
+                {
+                    return false;
+                }
+                
+                
+            }
+        }
+        
+        
+        
+        return true;
+    }
+    
+    
+    int shipWithinDays(vector<int>& weights, int days) {
+        
+        int n=weights.size();
+        int sum=0;
+        int start=0;
+        
+        for(int i=0;i<n;i++)
+        {
+            sum+=weights[i];
+            start=max(start,weights[i]);
+        }
+        
+        int end=sum;
+        int ans=INT_MAX;
+        
+        while(start<=end)
+        {
+            int mid=start+(end-start)/2;
+            
+            if(is_possible(weights,days,mid,n))
+            {
+                ans=min(ans,mid);
+                end=mid-1;
+            }
+            else
+            {
+                start=mid+1;
+            }
+            
+        
+        }
+        
+        
+        return ans;
+        
+    }
+};
