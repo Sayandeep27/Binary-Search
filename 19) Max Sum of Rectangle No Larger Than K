@@ -1,0 +1,72 @@
+class Solution {
+public:
+
+   int sub_sum(vector<int>&nums,int k,int n)
+   {
+       int maxi=INT_MIN;
+
+       for(int i=0;i<n;i++)
+       {
+           int sum=0;
+
+           for(int j=i;j<n;j++)
+           {
+               sum+=nums[j];
+
+               if(sum<=k and sum>maxi)
+               {
+                   maxi=sum;
+               }
+
+           }
+       }
+
+       return maxi;
+
+   }
+
+    int solve(int index,vector<vector<int>>&grid,int k,int n,int m)
+    {
+         if(index==n) return INT_MIN;
+
+         int ans=INT_MIN;
+
+         vector<int>pref_sum(m,0);
+
+
+         for(int i=index;i<n;i++)
+         {
+             for(int j=0;j<m;j++)
+             {
+                 pref_sum[j]+=grid[i][j];
+             }
+
+             ans=max(ans,sub_sum(pref_sum,k,m));
+         }
+       
+        
+        ans=max(ans,solve(index+1,grid,k,n,m));
+
+
+        return ans;
+
+
+
+    }
+
+
+    int maxSumSubmatrix(vector<vector<int>>& grid, int k) {
+        
+        int n=grid.size();
+        int m=grid[0].size();
+        int i=0;
+
+        int ans=solve(i,grid,k,n,m);
+
+        if(ans==INT_MIN) return -1;
+
+
+        return ans;
+
+    }
+};
