@@ -1,0 +1,65 @@
+class Solution {
+public:
+ 
+    int solve(vector<vector<int>>&nums,int index,vector<int>&dp)
+    {
+        int n=nums.size();
+
+        // base cases
+
+        if(index>=n) return 0;
+
+        if(dp[index]!=-1) return dp[index];
+
+
+        int start=0,end=n-1;
+        int newjobtime=n+1;
+
+        while(start<=end)
+        {
+            int mid=start+(end-start)/2;
+
+            if(nums[mid][0]>=nums[index][1])
+            {
+                newjobtime=mid;
+                end=mid-1;
+            }
+            else
+            {
+                start=mid+1;
+            }
+        }
+
+
+        return dp[index]=max(solve(nums,index+1,dp),nums[index][2]+solve(nums,newjobtime,dp));
+
+
+
+    }
+
+
+    int jobScheduling(vector<int>& starttime, vector<int>& endtime, vector<int>& profit) {
+         
+         int n=starttime.size();
+
+         vector<vector<int>>nums;
+
+         for(int i=0;i<n;i++)
+         {
+             nums.push_back({starttime[i],endtime[i],profit[i]});
+         }
+
+
+         sort(nums.begin(),nums.end());
+
+          int index=0;
+
+
+          vector<int>dp(1000001,-1);
+       
+         return solve(nums,index,dp);
+
+
+
+    }
+};
