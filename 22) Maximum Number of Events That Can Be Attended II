@@ -1,0 +1,43 @@
+class Solution {
+public:
+    
+    int solve(vector<vector<int>>&events,int k,int i,vector<vector<int>>&dp)
+    {
+        int n=events.size();
+
+        // base case
+        if(i>=n) return 0;
+
+        if(dp[i][k]!=-1) return dp[i][k];
+
+        int ans=solve(events,k,i+1,dp);
+
+        if(k>0)
+        {
+            vector<int>temp;
+            
+            temp.push_back(events[i][1]);
+            temp.push_back(1e9);
+            temp.push_back(1e9);
+
+            int index=upper_bound(events.begin(),events.end(),temp)-events.begin();
+
+            ans=max(ans,events[i][2]+solve(events,k-1,index,dp));
+
+        }
+
+
+        return dp[i][k]=ans;
+    }
+
+    int maxValue(vector<vector<int>>& events, int k) {
+        
+        int n=events.size();
+
+        sort(events.begin(),events.end());
+
+        vector<vector<int>>dp(n+1,vector<int>(k+1,-1));
+
+        return solve(events,k,0,dp);
+    }
+};
