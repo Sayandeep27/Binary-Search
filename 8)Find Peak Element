@@ -1,34 +1,30 @@
-class Solution{
+class Solution {
 public:
-	
-	int findMaximum(int arr[], int n) {
-	    // code here
-	   int start=0,end=n-1;
-	   
-	   if(arr[n-1]>arr[n-2])
-	   {
-	       return arr[n-1];
-	   }
-	   
-	   while(start<=end)
-	   {
-	       int mid=start+(end-start)/2;
-	       
-	       if(arr[mid]>arr[mid-1] and arr[mid]>arr[mid+1])
-	       {
-	           return arr[mid];
-	       }
-	       else if(arr[mid]>arr[mid-1] and arr[mid]<arr[mid+1])
-	       {
-	           start=mid+1;
-	       }
-	       else
-	       {
-	           end=mid-1;
-	       }
-	   }
-	   
-	   
-	   return -1;
-	}
+    int findPeakElement(vector<int>& nums) {
+         
+         int n=nums.size();
+
+         int start=0,end=n-1;
+
+         if(start==end) return start;
+         if(nums[start]>nums[start+1]) return start;
+         if(nums[end]>nums[end-1]) return end;
+
+         start++; end--;
+
+         while(start<=end)
+         {
+             int mid=start+(end-start)/2;
+
+             int prev=(mid-1+n)%n;
+             int next=(mid+1)%n;
+
+             if(nums[prev]<nums[mid] and nums[mid]>nums[next]) return mid;
+             else if(nums[prev]>nums[mid]) end=mid-1;
+             else start=mid+1;
+         }
+
+         return -1;
+        
+    }
 };
