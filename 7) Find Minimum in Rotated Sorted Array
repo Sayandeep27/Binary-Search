@@ -1,7 +1,6 @@
 class Solution {
 public:
-    int findMin(vector<int>& nums) {
-
+    int findPeakElement(vector<int>& nums) {
         int n=nums.size();
 
         int start=0,end=n-1;
@@ -9,19 +8,12 @@ public:
         while(start<end)
         {
             int mid=start+(end-start)/2;
-            
-            // If mid element is greater than the high element, the minimum is in the right half
-            if(nums[mid]>nums[end])  
-            {
-                start=mid+1;
-            }
-            else
-            {
-                end=mid;
-            }
+
+            if(nums[mid]>nums[mid+1]) end=mid;  // peak is in the left half including mid
+            else start=mid+1;  // peak is in the right half excluding mid
         }
 
-
-        return nums[start]; // or nums[end]  since start==end
+        return start;  // or end since start==end
+        
     }
 };
