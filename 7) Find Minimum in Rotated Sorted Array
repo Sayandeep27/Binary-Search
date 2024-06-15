@@ -1,33 +1,27 @@
 class Solution {
 public:
     int findMin(vector<int>& nums) {
+
         int n=nums.size();
 
         int start=0,end=n-1;
 
-        while(start<=end)
+        while(start<end)
         {
             int mid=start+(end-start)/2;
-            int prev=(mid+n-1)%n;
-
-            if(nums[prev]>nums[mid]) return nums[mid];
-
-
-            if(nums[start]>nums[mid])
-            {
-                end=mid-1;
-            }
-            else if(nums[mid]>nums[end])
+            
+            // If mid element is greater than the high element, the minimum is in the right half
+            if(nums[mid]>nums[end])  
             {
                 start=mid+1;
             }
             else
             {
-                 return nums[start];
+                end=mid;
             }
         }
 
 
-        return -1;
+        return nums[start];
     }
 };
