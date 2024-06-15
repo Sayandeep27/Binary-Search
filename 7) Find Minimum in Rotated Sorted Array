@@ -22,6 +22,6 @@ public:
         }
 
 
-        return nums[start];
+        return nums[start]; // or nums[end]  since start==end
     }
 };
