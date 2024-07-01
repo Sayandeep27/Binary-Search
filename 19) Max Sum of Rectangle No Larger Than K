@@ -1,72 +1,74 @@
 class Solution {
 public:
-
-   int sub_sum(vector<int>&nums,int k,int n)
-   {
-       int maxi=INT_MIN;
-
-       for(int i=0;i<n;i++)
-       {
-           int sum=0;
-
-           for(int j=i;j<n;j++)
-           {
-               sum+=nums[j];
-
-               if(sum<=k and sum>maxi)
-               {
-                   maxi=sum;
-               }
-
-           }
-       }
-
-       return maxi;
-
-   }
-
-    int solve(int index,vector<vector<int>>&grid,int k,int n,int m)
+    // Function to find the maximum subarray sum no larger than k in a 1D array
+    int sub_sum(vector<int>& nums, int k, int n)
     {
-         if(index==n) return INT_MIN;
+        int maxi = INT_MIN; // Initialize the maximum sum to the smallest possible value
 
-         int ans=INT_MIN;
+        // Iterate through each possible starting index of subarray
+        for (int i = 0; i < n; i++)
+        {
+            int sum = 0; // Initialize sum of subarray
 
-         vector<int>pref_sum(m,0);
+            // Iterate through each possible ending index of subarray
+            for (int j = i; j < n; j++) 
+            {
+                sum += nums[j]; // Add the current element to sum
+
+                // If the sum is no larger than k and greater than current max, update max
+                if (sum <= k && sum > maxi) 
+                {
+                    maxi = sum;
+                }
+            }
+        }
+
+        return maxi; // Return the maximum subarray sum no larger than k
+    }
+
+    // Function to recursively solve the problem by considering submatrices starting from each row
+    int solve(int index, vector<vector<int>>& grid, int k, int n, int m) 
+    {
+        if (index == n) return INT_MIN;       // Base case: if index reaches the end, return smallest possible value
+
+        int ans = INT_MIN;         // Initialize the answer to the smallest possible value
+        vector<int> pref_sum(m, 0);          // Vector to store prefix sums of columns
+
+        // Iterate through rows starting from 'index'
+        for (int i = index; i < n; i++)
+        {
+            // Update prefix sums for the current row
+            for (int j = 0; j < m; j++) 
+            {
+                pref_sum[j] += grid[i][j];
+            }
 
 
-         for(int i=index;i<n;i++)
-         {
-             for(int j=0;j<m;j++)
-             {
-                 pref_sum[j]+=grid[i][j];
-             }
-
-             ans=max(ans,sub_sum(pref_sum,k,m));
-         }
-       
-        
-        ans=max(ans,solve(index+1,grid,k,n,m));
+            // Get the maximum subarray sum no larger than k for the current prefix sums
+            ans = max(ans, sub_sum(pref_sum, k, m));
+        }
 
 
-        return ans;
+        // Recursively solve for the next starting row and update the answer
+        ans = max(ans, solve(index + 1, grid, k, n, m));
 
-
-
+        return ans; // Return the maximum sum found
     }
 
 
-    int maxSumSubmatrix(vector<vector<int>>& grid, int k) {
-        
-        int n=grid.size();
-        int m=grid[0].size();
-        int i=0;
+    // Main function to find the maximum sum of submatrix no larger than k
+    int maxSumSubmatrix(vector<vector<int>>& grid, int k)     
+    {
+        int n = grid.size(); // Number of rows
+        int m = grid[0].size(); // Number of columns
 
-        int ans=solve(i,grid,k,n,m);
+        int i = 0; // Starting index for rows
 
-        if(ans==INT_MIN) return -1;
+        // Get the result by solving from the first row
+        int ans = solve(i, grid, k, n, m);
 
+        if (ans == INT_MIN) return -1;         // If no valid sum is found, return -1
 
-        return ans;
-
+        return ans;          // Return the maximum sum found
     }
 };
