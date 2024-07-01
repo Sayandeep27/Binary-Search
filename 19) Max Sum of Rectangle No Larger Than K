@@ -1,41 +1,48 @@
 class Solution {
 public:
-    // Function to find the maximum subarray sum no larger than k in a 1D array
-    int sub_sum(vector<int>& nums, int k, int n)
+    
+int sub_sum(vector<int>& nums, int k) 
+{
+    int n = nums.size();
+    int maxi = INT_MIN; // Initialize the maximum sum to the smallest possible value
+
+    int prefix_sum = 0; // Initialize prefix sum
+    set<int> prefix_sums; // Set to store prefix sums
+
+    prefix_sums.insert(0); // Initialize with zero to consider subarrays starting from the beginning
+
+    // Iterate through each element in the array
+    for (int i = 0; i < n; i++)
     {
-        int maxi = INT_MIN; // Initialize the maximum sum to the smallest possible value
+        prefix_sum += nums[i]; // Update prefix sum with current element
 
-        // Iterate through each possible starting index of subarray
-        for (int i = 0; i < n; i++)
+        // Find the smallest prefix sum in the set such that (prefix_sum - prefix) <= k
+        auto it = prefix_sums.lower_bound(prefix_sum - k);
+        
+        if (it != prefix_sums.end()) 
         {
-            int sum = 0; // Initialize sum of subarray
-
-            // Iterate through each possible ending index of subarray
-            for (int j = i; j < n; j++) 
-            {
-                sum += nums[j]; // Add the current element to sum
-
-                // If the sum is no larger than k and greater than current max, update max
-                if (sum <= k && sum > maxi) 
-                {
-                    maxi = sum;
-                }
-            }
+            // Update the maximum sum if a valid subarray sum is found
+            maxi = max(maxi, prefix_sum - *it);
         }
 
-        return maxi; // Return the maximum subarray sum no larger than k
+        // Insert the current prefix sum into the set
+        prefix_sums.insert(prefix_sum);
     }
 
-    // Function to recursively solve the problem by considering submatrices starting from each row
-    int solve(int index, vector<vector<int>>& grid, int k, int n, int m) 
-    {
-        if (index == n) return INT_MIN;       // Base case: if index reaches the end, return smallest possible value
+    return maxi; // Return the maximum subarray sum no larger than k
+}
 
-        int ans = INT_MIN;         // Initialize the answer to the smallest possible value
-        vector<int> pref_sum(m, 0);          // Vector to store prefix sums of columns
+    int solve(int index, vector<vector<int>>& grid, int k, int n, int m) {
+        
+        // base case
+        if (index == n) return INT_MIN; // Base case: if index reaches the end, return smallest possible value
+
+        int ans = INT_MIN; // Initialize the answer to the smallest possible value
+
+        vector<int> pref_sum(m, 0); // Vector to store prefix sums of columns
 
         // Iterate through rows starting from 'index'
-        for (int i = index; i < n; i++)
+        for (int i = index; i < n; i++) 
         {
             // Update prefix sums for the current row
             for (int j = 0; j < m; j++) 
@@ -43,11 +50,9 @@ public:
                 pref_sum[j] += grid[i][j];
             }
 
-
             // Get the maximum subarray sum no larger than k for the current prefix sums
-            ans = max(ans, sub_sum(pref_sum, k, m));
+            ans = max(ans, sub_sum(pref_sum, k));
         }
-
 
         // Recursively solve for the next starting row and update the answer
         ans = max(ans, solve(index + 1, grid, k, n, m));
@@ -55,20 +60,18 @@ public:
         return ans; // Return the maximum sum found
     }
 
-
-    // Main function to find the maximum sum of submatrix no larger than k
-    int maxSumSubmatrix(vector<vector<int>>& grid, int k)     
-    {
-        int n = grid.size(); // Number of rows
+    int maxSumSubmatrix(vector<vector<int>>& grid, int k) {
+        
+         int n = grid.size(); // Number of rows
         int m = grid[0].size(); // Number of columns
 
-        int i = 0; // Starting index for rows
+        int i = 0;    // Starting index for rows
 
         // Get the result by solving from the first row
         int ans = solve(i, grid, k, n, m);
 
-        if (ans == INT_MIN) return -1;         // If no valid sum is found, return -1
+        if (ans == INT_MIN) return -1;    // If no valid sum is found, return -1
 
-        return ans;          // Return the maximum sum found
+        return ans; // Return the maximum sum found
     }
 };
