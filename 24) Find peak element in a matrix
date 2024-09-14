@@ -1,25 +1,29 @@
 class Solution {
 public:
-    int find_max_index(vector<vector<int>>&mat,int mid)
-    {
-        int maxi=INT_MIN;
-        int idx=-1;
 
-        for(int i=0;i<mat.size();i++)
+    int solve(int col,vector<vector<int>>&grid)
+    {
+        int n=grid.size(); int m=grid[0].size();
+
+        int index=-1;
+        int maxi=INT_MIN;
+
+        for(int row=0;row<n;row++)
         {
-            if(mat[i][mid]>maxi)
+            if(grid[row][col]>maxi)
             {
-                maxi=mat[i][mid];
-                idx=i;
+                maxi=grid[row][col];
+                index=row;
             }
         }
 
-        return idx;
+        return index;
     }
 
-    vector<int> findPeakGrid(vector<vector<int>>& mat) {
-
-        int n=mat.size(); int m=mat[0].size();
+    vector<int> findPeakGrid(vector<vector<int>>& grid) {
+        
+        int n=grid.size();
+        int m=grid[0].size();
 
         int start=0,end=m-1;
 
@@ -27,15 +31,46 @@ public:
         {
             int mid=start+(end-start)/2;
 
-            int max_row_index=find_max_index(mat,mid);
+            int max_row_index=solve(mid,grid);
 
-            int left = mid-1>=0 ? mat[max_row_index][mid-1] : -1;
-            int right = mid+1<m ? mat[max_row_index][mid+1]:-1;
+            int left,right;
 
-            if(mat[max_row_index][mid]>left and mat[max_row_index][mid]>right) return {max_row_index,mid};
-            else if(mat[max_row_index][mid]<left) end=mid-1;
-            else start=mid+1;
-        }   
+            if(mid-1>=0)
+            {
+               left=grid[max_row_index][mid-1];
+            }
+            else
+            {
+                left=-1;
+            }
+
+
+            if(mid+1<m)
+            {
+                right=grid[max_row_index][mid+1];
+
+            }
+            else
+            {
+               right=-1;
+            }
+
+
+            int temp=grid[max_row_index][mid];
+
+            if(temp>left and temp>right)
+            {
+                return {max_row_index,mid};
+            }
+            else if(temp>left)
+            {
+                start=mid+1;
+            }
+            else
+            {
+                end=mid-1;
+            }
+        }
 
 
         return {-1,-1};
